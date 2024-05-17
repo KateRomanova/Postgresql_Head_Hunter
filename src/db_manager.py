@@ -48,7 +48,7 @@ class DBManager:
     def get_vacancies_with_keyword(self, keyword):
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
         query = """
-                        SELECT * FROM vacancy_table
+                        SELECT * FROM vacancies
                         WHERE LOWER(job_title) LIKE %s
                         """
         self.cur.execute(query, ('%' + keyword.lower() + '%',))

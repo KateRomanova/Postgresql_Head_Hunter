@@ -1,3 +1,5 @@
+import sys
+
 from db_manager import DBManager
 from config import config
 from utils import create_db
@@ -38,4 +40,11 @@ def main():
 
 
 if __name__ == "__main__":
+    main()
+
+print(f'Нажмите любую клавишу, если хотите продолжить или наберите слово "стоп":')
+user_request = input()
+if user_request == 'стоп':
+    sys.exit()
+else:
     main()
