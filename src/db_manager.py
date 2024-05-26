@@ -53,7 +53,3 @@ class DBManager:
                         """
         self.cur.execute(query, ('%' + keyword.lower() + '%',))
         return self.cur.fetchall()
-
-    def close_connection(self):
-        self.cur.close()
-        self.conn.close()
