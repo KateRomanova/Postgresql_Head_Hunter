@@ -51,8 +51,8 @@ def get_vacancies(data):
     return vacancies_info
 
 
-data = get_vacancies(get_companies())
-print(data)
+# data = get_vacancies(get_companies())
+# print(data)
 
 # vacancies = []
 #
