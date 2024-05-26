@@ -45,42 +45,45 @@ def get_vacancies(data):
         if response.status_code == 200:
             vacancies = response.json()['items']
             vacancies_info.extend(vacancies)
+
         else:
             print(f"Ошибка при запросе к API для компании {company_data['company_name']}: {response.status_code}")
     return vacancies_info
 
-print(get_vacancies(get_companies()))
 
-#     vacancies = []
+data = get_vacancies(get_companies())
+print(data)
+
+# vacancies = []
 #
-#     for company in companies:
-#         url = "https://api.hh.ru/vacancies"
-#         params = {'text': company, 'per_page': 100}
-#         data = requests.get(url, params=params)
+# for company in get_companies():
+#     url = "https://api.hh.ru/vacancies"
+#     params = {'text': company, 'per_page': 100}
+#     data = requests.get(url, params=params)
 #
-#         if data.status_code == 200:
-#             json_data = data.json()
-#             for item in json_data['items']:
-#                 job_title = item['name']
-#                 link_to_vacancy = item['alternate_url']
-#                 salary = item['salary']
-#                 if salary:
-#                     salary_from = salary.get('from')
-#                     salary_to = salary.get('to')
-#                 description = item['snippet']['responsibility']
-#                 requirement = item['snippet']['requirement']
+#     if data.status_code == 200:
+#         json_data = data.json()
+#         for item in json_data['items']:
+#             job_title = item['name']
+#             link_to_vacancy = item['alternate_url']
+#             salary = item['salary']
+#             if salary:
+#                 salary_from = salary.get('from')
+#                 salary_to = salary.get('to')
+#             description = item['snippet']['responsibility']
+#             requirement = item['snippet']['requirement']
 #
-#                 vacancies.append({
-#                     "company": company,
-#                     "job_title": job_title,
-#                     "link_to_vacancy": link_to_vacancy,
-#                     "salary_from": salary_from,
-#                     "salary_to": salary_to,
-#                     "description": description,
-#                     "requirement": requirement
-#                 })
-#         else:
-#             print(f"Ошибка {data.status_code}")
+#             vacancies.append({
+#                 "company": company,
+#                 "job_title": job_title,
+#                 "link_to_vacancy": link_to_vacancy,
+#                 "salary_from": salary_from,
+#                 "salary_to": salary_to,
+#                 "description": description,
+#                 "requirement": requirement
+#             })
+#     else:
+#         print(f"Ошибка {data.status_code}")
 #     return vacancies
 #
 #

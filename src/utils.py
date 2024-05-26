@@ -1,16 +1,19 @@
 import psycopg2
-import json
+from get_vacancy import get_vacancies, get_companies
+from config import config
+
 
 def create_db(name, params):
-    conn = psycopg2.connect(dbname='postgres', **params)
-    conn.autocommit = True
-    cur = conn.cursor()
-    cur.execute(f'DROP DATABASE IF EXISTS {name}')
-    cur.execute(f'CREATE DATABASE {name}')
-    conn.close()
-    conn = psycopg2.connect(dbname=name, **params)
-    with conn.cursor() as cur:
-        cur.execute("""
+    try:
+        conn = psycopg2.connect(dbname='postgres', **params)
+        conn.autocommit = True
+        cur = conn.cursor()
+        cur.execute(f'DROP DATABASE IF EXISTS {name}')
+        cur.execute(f'CREATE DATABASE {name}')
+        conn.close()
+        conn = psycopg2.connect(dbname=name, **params)
+        with conn.cursor() as cur:
+            cur.execute("""
                 CREATE TABLE vacancies (
                     company varchar (100),
                     job_title varchar(100),
@@ -20,21 +23,16 @@ def create_db(name, params):
                     description text,
                     requirement text); 
                     """)
-    conn.commit()
-    conn.close()
 
-
-    with open('vacancy_json.json', 'r', encoding='utf-8') as file:  # заполняем таблицу данными из созданного json-файла
-        vacancies = json.load(file)
-        conn = psycopg2.connect(dbname=name, **params)
-        for vacancy in vacancies:
-            with conn.cursor() as cur:
-                cur.execute(
-                    'INSERT INTO vacancies (company, job_title, link_to_vacancy, salary_from, salary_to, '
-                    'description, requirement) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                    (vacancy.get('company'), vacancy.get('job_title'), vacancy.get('link_to_vacancy'),
-                     vacancy.get('salary_from'), vacancy.get('salary_to'), vacancy.get('description'),
-                     vacancy.get('requirement')))
+        insert_query = ('INSERT INTO vacancies (company, job_title, link_to_vacancy, salary_from, salary_to, '
+                        'description, requirement) VALUES (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT (id) DO NOTHING')
+        cur.executemany(insert_query, get_vacancies(get_companies()))
 
         conn.commit()
+        cur.close()
         conn.close()
+
+        print("Данные успешно вставлены в таблицу.")
+
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
