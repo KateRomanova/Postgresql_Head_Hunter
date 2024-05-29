@@ -11,9 +11,9 @@ class DBManager:
     def get_companies_and_vacancies_count(self):
         """Получает список всех компаний и количество вакансий у каждой компании."""
         query = """
-        SELECT company, 
+        SELECT company_name, 
         COUNT(*) FROM vacancies
-        GROUP BY company
+        GROUP BY company_name
         """
         self.cur.execute(query)
         return {row[0]: row[1] for row in self.cur.fetchall()}
@@ -22,7 +22,7 @@ class DBManager:
         """Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на
         вакансию."""
         query = """
-        SELECT job_title, company, salary_from, salary_to, link_to_vacancy FROM vacancies
+        SELECT job_title, company_name, salary_from, link_to_vacancy FROM vacancies
         """
         self.cur.execute(query)
         return self.cur.fetchall()
